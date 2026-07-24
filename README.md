@@ -386,20 +386,6 @@ Refresh the dashboard after ETL execution.
 
 ---
 
-# 📷 Screenshots
-
-## Architecture
-
-(Add architecture image)
-
----
-
-## Airflow DAG
-
-(Add screenshot)
-
----
-
 ## Docker Containers
 
 (Add screenshot)
