@@ -20,6 +20,4 @@ airflow-webserver.pid
 .DS_Store
 Thumbs.db
 
-
-
-
+.env
