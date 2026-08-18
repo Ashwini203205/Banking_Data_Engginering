@@ -1,30 +1,44 @@
-import pandas as pd
-from sqlalchemy import create_engine
+"""
+Test connection script to verify PostgreSQL database accessibility.
+"""
 
-# Database connection URI
-# format: postgresql://username:password@host:port/database_name
-DATABASE_URL = "postgresql://admin:password123@localhost:5432/banking_db"
+import os, sys
+import psycopg2
+
+sys.stdout.reconfigure(encoding='utf-8')
+
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_PORT = int(os.getenv("DB_PORT", "5432"))
+DB_NAME = os.getenv("DB_NAME", "banking_analytics")
+DB_USER = os.getenv("DB_USER", "postgres")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "password")
 
 try:
-    # 1. Create the database engine
-    engine = create_engine(DATABASE_URL)
+    conn = psycopg2.connect(
+        host=DB_HOST,
+        port=DB_PORT,
+        database=DB_NAME,
+        user=DB_USER,
+        password=DB_PASSWORD
+    )
+    cur = conn.cursor()
+    cur.execute("SELECT version();")
+    db_version = cur.fetchone()[0]
+    print(f"✅ Successfully connected to PostgreSQL Database '{DB_NAME}' on {DB_HOST}:{DB_PORT}!")
+    print(f"PostgreSQL Version: {db_version}\n")
     
-    # 2. Create a dummy dataframe representing mock transactions
-    df = pd.DataFrame({
-        'transaction_id': [101, 102, 103],
-        'customer_id': [9901, 9902, 9903],
-        'amount': [250.50, 1000.00, 45.25],
-        'type': ['deposit', 'transfer', 'withdrawal']
-    })
-    
-    # 3. Write data to PostgreSQL
-    df.to_sql('mock_transactions', engine, if_exists='replace', index=False)
-    print("✅ Successfully connected to DB and created 'mock_transactions' table!")
-    
-    # 4. Read it back to verify
-    query_df = pd.read_sql('SELECT * FROM mock_transactions', engine)
-    print("\nData retrieved from Database:")
-    print(query_df)
+    # Query sample tables
+    cur.execute("SELECT table_schema, table_name FROM information_schema.tables WHERE table_schema IN ('gold', 'silver', 'bronze');")
+    tables = cur.fetchall()
+    print("Available Data Tables:")
+    for schema, tbl in tables:
+        cur.execute(f"SELECT COUNT(*) FROM {schema}.{tbl};")
+        cnt = cur.fetchone()[0]
+        print(f"  - {schema}.{tbl}: {cnt:,} records")
+        
+    cur.close()
+    conn.close()
+    print("\n✅ All connection checks passed successfully!")
 
 except Exception as e:
     print(f"❌ Connection failed: {e}")
