@@ -1,450 +1,605 @@
-# Banking-Analytics-DE
-# 🏦 Banking Analytics Data Engineering Pipeline
+# 🏦 Banking Analytics & AI Assistant
 
-> End-to-End Data Engineering Project using PySpark, PostgreSQL, Docker, Apache Airflow, and Power BI
+### End-to-End Data Engineering + Data Analytics + AI Project
 
----
-
-# 📌 Project Overview
-
-This project demonstrates a complete **Data Engineering Pipeline** built using industry-standard tools and best practices.
-
-The pipeline ingests raw banking customer data, processes it through the **Medallion Architecture (Bronze, Silver, Gold)**, stores the transformed data in PostgreSQL, automates the workflow using Apache Airflow, containerizes the application with Docker, and visualizes business insights using Power BI.
+**Banking Analytics & AI Assistant** is an end-to-end project that takes raw banking data, processes and transforms it through a data pipeline, stores the cleaned data in PostgreSQL, creates business insights using Power BI, and provides an AI-powered chatbot for asking questions about the banking data.
 
 ---
 
-# 🎯 Project Objectives
+## 📌 What Does This Project Do?
 
-- Build an end-to-end ETL pipeline
-- Implement Medallion Architecture
-- Perform data cleaning and transformations
-- Create business summary tables
-- Store processed data in PostgreSQL
-- Automate the pipeline using Apache Airflow
-- Containerize the project using Docker
-- Build an interactive Power BI dashboard
+This project converts **raw banking data → useful information → business insights → AI answers**.
+
+### Simple Flow
+
+```text
+Raw Banking Data
+       ↓
+    PySpark
+       ↓
+Data Cleaning & Transformation
+       ↓
+ Bronze → Silver → Gold
+       ↓
+   PostgreSQL
+       ↓
+ ┌───────────────┬
+ ↓               ↓
+Power BI       AI Assistant
+Dashboard       Chatbot
+```
+
+---
+
+## 🎯 Project Goal
+
+The main goal is to build a complete banking data platform that can:
+
+* Process large amounts of banking data
+* Clean and transform raw data
+* Store organized data in a database
+* Automate the data pipeline
+* Create useful business reports
+* Allow users to ask questions using an AI chatbot
+
+---
+
+# 🛠️ Technologies Used
+
+| Technology        | Used For                   |
+| ----------------- | -------------------------- |
+| 🐍 Python         | Programming                |
+| 🔥 PySpark        | Data Processing            |
+| 🗄️ PostgreSQL    | Database                   |
+| ⚙️ Apache Airflow | Pipeline Automation        |
+| 🐳 Docker         | Containerization           |
+| 📊 Power BI       | Dashboard & Visualization  |
+| 🤖 AI             | Natural Language Questions |
+| 🖥️ Streamlit     | AI Chatbot Interface       |
+| 🐙 Git & GitHub   | Version Control            |
 
 ---
 
 # 🏗️ Project Architecture
 
-```
-                        CSV Dataset
-                             │
-                             ▼
-                     PySpark Ingestion
-                             │
-                             ▼
-                     Bronze Layer (Raw)
-                             │
-                             ▼
-                Silver Layer (Cleaned Data)
-                             │
-                             ▼
-               Gold Layer (Business Tables)
-                             │
-                             ▼
-                     PostgreSQL Database
-                     /                  \
-                    /                    \
-                   ▼                      ▼
-        Apache Airflow              Power BI Dashboard
-          (Automation)           (Business Insights)
-                   ▲
-                   │
-              Docker Container
-```
-
----
-
-# 🛠️ Technology Stack
-
-| Technology | Purpose |
-|------------|----------|
-| Python | Programming Language |
-| PySpark | Data Processing |
-| PostgreSQL | Data Warehouse |
-| SQL | Querying |
-| Apache Airflow | Workflow Automation |
-| Docker | Containerization |
-| Power BI | Dashboard & Reporting |
-| Git | Version Control |
-| GitHub | Source Code Repository |
-
----
-
-# 📂 Project Structure
-
-```
-Banking-Analytics-DE
-│
-├── airflow/
-│   └── DAG files
-│
-├── data/
-│   └── bank.csv
-│
-├── docker/
-│   └── Docker related files
-│
-├── jars/
-│   └── PostgreSQL JDBC Driver
-│
-├── logs/
-│
-├── spark/
-│   ├── load_bronze.py
-│   ├── load_silver.py
-│   ├── load_gold.py
-│   ├── load_gold_customer.py
-│   ├── load_gold_job.py
-│   ├── load_gold_month.py
-│   ├── load_gold_education.py
-│   ├── load_gold_marital.py
-│   ├── scd_type2.py
-│   └── ...
-│
-├── dashboard/
-│   └── Banking Analytics.pbix
-│
-├── docker-compose.yml
-├── Dockerfile
-├── requirements.txt
-└── README.md
+```text
+                         ┌──────────────────┐
+                         │   Banking CSV    │
+                         │      Data        │
+                         └────────┬─────────┘
+                                  │
+                                  ▼
+                         ┌──────────────────┐
+                         │     PySpark      │
+                         │ Data Processing  │
+                         └────────┬─────────┘
+                                  │
+                                  ▼
+                    ┌─────────────────────────┐
+                    │     BRONZE LAYER        │
+                    │       Raw Data          │
+                    └────────────┬────────────┘
+                                 │
+                                 ▼
+                    ┌─────────────────────────┐
+                    │     SILVER LAYER        │
+                    │ Cleaned & Transformed   │
+                    │          Data           │
+                    └────────────┬────────────┘
+                                 │
+                                 ▼
+                    ┌─────────────────────────┐
+                    │      GOLD LAYER         │
+                    │ Business Ready Data     │
+                    └────────────┬────────────┘
+                                 │
+                                 ▼
+                       ┌──────────────────┐
+                       │    PostgreSQL    │
+                       │     Database     │
+                       └────────┬─────────┘
+                                │
+                    ┌───────────┴───────────┐
+                    ▼                       ▼
+             ┌──────────────┐       ┌───────────────┐
+             │   Power BI   │       │ AI Assistant  │
+             │   Dashboard  │       │   Streamlit   │
+             └──────────────┘       └───────────────┘
 ```
 
 ---
 
-# 🔄 ETL Pipeline
+# 🔄 Data Pipeline
 
-## Step 1 – Data Source
+The project follows a simple **Bronze → Silver → Gold** architecture.
 
-- Bank Marketing Dataset (CSV)
-- 45,211 customer records
+### 🥉 Bronze Layer
 
----
+Stores the original/raw banking data.
 
-## Step 2 – Bronze Layer
+**Purpose:**
 
-Purpose:
+* Keep the original data
+* Maintain a raw copy
+* Prepare data for processing
 
-- Store raw data
-- No modifications
-- Preserve original records
-
-Output Table
-
-```
-bronze.customer_raw
+```text
+Raw CSV → Bronze
 ```
 
 ---
 
-## Step 3 – Silver Layer
+### 🥈 Silver Layer
 
-Data Cleaning Performed
+Contains cleaned and standardized data.
 
-- Remove duplicates
-- Handle null values
-- Trim spaces
-- Standardize text
-- Convert data types
-- Validate records
+**Operations include:**
 
-Output Table
+* Removing duplicates
+* Handling missing values
+* Cleaning text
+* Standardizing data
+* Converting data types
+* Validating records
 
-```
-silver.customer_clean
-```
-
----
-
-## Step 4 – Gold Layer
-
-Business transformation tables created:
-
-| Table | Description |
-|--------|-------------|
-| customer_summary | Overall KPIs |
-| deposit_summary | Deposit Subscription Summary |
-| job_summary | Customers by Job |
-| education_summary | Customers by Education |
-| marital_summary | Customers by Marital Status |
-| month_summary | Monthly Subscription Analysis |
-
----
-
-# 🗄️ Data Warehouse
-
-Database
-
-```
-PostgreSQL
-```
-
-Database Name
-
-```
-banking_analytics
-```
-
-Schemas
-
-```
-bronze
-silver
-gold
+```text
+Bronze → Cleaning → Silver
 ```
 
 ---
 
-# 📈 Power BI Dashboard
+### 🥇 Gold Layer
 
-Dashboard includes:
+Contains business-ready data used for analytics and reporting.
 
-✅ Total Customers
+Examples:
 
-✅ Subscribed Customers
+```text
+Customer Summary
+Job Summary
+Education Summary
+Marital Summary
+Monthly Summary
+Deposit Summary
+```
 
-✅ Average Age
-
-✅ Average Balance
-
-✅ Total Balance
-
-✅ Customers by Job
-
-✅ Customers by Education
-
-✅ Customers by Marital Status
-
-✅ Monthly Subscription Trend
-
-✅ Deposit Subscription Status
-
-✅ Business Insights Panel
-
----
-
-# 📊 Business Insights
-
-- 45K total customers
-- Around 5K customers subscribed to deposits
-- Average customer age is approximately 41 years
-- Total customer balance exceeds ₹61M
-- Majority of customers are married
-- Secondary education customers form the largest group
-- Customer subscriptions vary significantly across months
+```text
+Silver → Business Transformation → Gold
+```
 
 ---
 
 # ⚙️ Apache Airflow
 
-Airflow is used to automate the ETL workflow.
+Apache Airflow is used to **automate the complete data pipeline**.
 
-Pipeline Flow
+### Pipeline Workflow
 
-```
+```text
 Start
-
-↓
-
+  ↓
 Load Bronze
-
-↓
-
+  ↓
 Load Silver
-
-↓
-
+  ↓
 Load Gold
-
-↓
-
-SCD Type 2
-
-↓
-
-End
+  ↓
+Update Customer History
+  ↓
+Pipeline Complete
 ```
 
-Benefits
+Airflow helps with:
 
-- Workflow scheduling
-- Dependency management
-- Monitoring
-- Retry on failures
-- Pipeline automation
+* Scheduling
+* Task management
+* Dependencies
+* Monitoring
+* Automatic retries
+
+---
+
+# 🗄️ PostgreSQL Database
+
+PostgreSQL acts as the main database for the processed banking data.
+
+### Database Structure
+
+```text
+PostgreSQL
+│
+├── Bronze
+│   └── Raw Data
+│
+├── Silver
+│   └── Cleaned Data
+│
+└── Gold
+    ├── Customer Data
+    ├── Job Data
+    ├── Education Data
+    ├── Marital Data
+    ├── Monthly Data
+    └── Deposit Data
+```
+
+---
+
+# 📊 Power BI Dashboard
+
+Power BI is connected to the processed banking data to create interactive business reports.
+
+### Dashboard Provides Insights About:
+
+* 👥 Customers
+* 💰 Customer Balance
+* 📈 Average Balance
+* 🎂 Customer Age
+* 💼 Job Categories
+* 🎓 Education
+* 💍 Marital Status
+* 📅 Monthly Trends
+* 🏦 Deposit Subscription
+
+### Example Business Questions
+
+```text
+How many customers are there?
+
+What is the average balance?
+
+Which job category has the most customers?
+
+How many customers subscribed to deposits?
+
+Which month has the highest subscriptions?
+```
+
+---
+
+# 🤖 AI Banking Assistant
+
+The project also includes an **AI-powered Banking Assistant**.
+
+The chatbot provides a simple way for users to interact with banking data using normal English questions.
+
+### How It Works
+
+```text
+User Question
+      ↓
+Streamlit Chatbot
+      ↓
+Question Processing
+      ↓
+Database Query
+      ↓
+PostgreSQL
+      ↓
+Banking Data
+      ↓
+AI Response
+      ↓
+User
+```
+
+### Example Questions
+
+💬 **"What is the total balance?"**
+
+💬 **"What is the average customer balance?"**
+
+💬 **"How many customers are there?"**
+
+💬 **"How many customers subscribed to deposits?"**
+
+💬 **"Which job has the most customers?"**
+
+💬 **"Show me customer information by education."**
+
+The purpose is to make data analysis easier for users who do not want to manually write SQL queries.
+
+---
+
+# 🧩 Slowly Changing Dimension — SCD Type 2
+
+The project uses **SCD Type 2** to maintain historical changes in customer information.
+
+Instead of replacing old information, the system keeps the previous record and creates a new version.
+
+### Example
+
+```text
+Customer Information
+
+Old Record
+Start Date → 2026-01-01
+End Date   → 2026-05-01
+Current    → No
+
+        ↓ Change
+
+New Record
+Start Date → 2026-05-02
+End Date   → NULL
+Current    → Yes
+```
+
+This helps maintain **customer history over time**.
 
 ---
 
 # 🐳 Docker
 
-Docker is used to containerize the application.
+Docker is used to run the project services in separate containers.
 
-Benefits
+### Main Services
 
-- Consistent environment
-- Easy deployment
-- Portable setup
-- Simplified dependency management
+```text
+Docker
+│
+├── Airflow
+├── PostgreSQL
+└── Spark
+```
+
+Docker makes the project easier to:
+
+* Run
+* Configure
+* Manage
+* Deploy
+* Share
 
 ---
 
-# 🧩 Slowly Changing Dimension (SCD Type 2)
+# 📂 Project Structure
 
-Implemented for customer history tracking.
-
-Maintains:
-
-- Historical records
-- Start Date
-- End Date
-- Current Flag
-
-Table
-
-```
-gold.dim_customer_history
+```text
+Banking_Data_Engginering/
+│
+├── 📁 ai_application/
+│   ├── agents/
+│   ├── models/
+│   ├── pages/
+│   ├── app.py
+│   ├── config.py
+│   ├── db.py
+│   ├── router.py
+│   ├── styles.py
+│   └── utils.py
+│
+├── 📁 dags/
+│   └── Airflow DAG files
+│
+├── 📁 data/
+│   └── Banking Dataset
+│
+├── 📁 spark/
+│   ├── load_bronze.py
+│   ├── load_silver.py
+│   ├── load_gold.py
+│   └── SCD processing files
+│
+├── 📁 jars/
+│   └── PostgreSQL JDBC Driver
+│
+├── 📁 postgres/
+│   └── PostgreSQL configuration
+│
+├── 🐳 docker-compose.yml
+├── 🐳 Dockerfile
+├── ⚙️ airflow.env
+├── 📄 requirements.txt
+├── 🧪 test_connection.py
+├── 🧪 test_full_suite.py
+├── 🧪 test_gemini.py
+└── 📖 README.md
 ```
 
 ---
 
 # 🚀 How to Run the Project
 
-## Clone Repository
+## 1. Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Ashwini203205/Banking_Data_Engginering.git
+```
+
+```bash
+cd Banking_Data_Engginering
 ```
 
 ---
 
-## Create Virtual Environment
+## 2. Start Docker Services
 
-```bash
-python -m venv .venv
-```
-
----
-
-## Activate Environment
-
-Windows
-
-```bash
-.venv\Scripts\activate
-```
-
----
-
-## Install Requirements
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-## Start PostgreSQL
-
-Ensure PostgreSQL service is running.
-
----
-
-## Run ETL
-
-```bash
-python spark/load_bronze.py
-
-python spark/load_silver.py
-
-python spark/load_gold.py
-
-python spark/scd_type2.py
-```
-
----
-
-## Start Airflow
+Make sure **Docker Desktop** is running.
 
 ```bash
 docker compose up -d
 ```
 
-Open
+Check containers:
 
+```bash
+docker ps
 ```
+
+---
+
+## 3. Open Airflow
+
+Open:
+
+```text
 http://localhost:8080
 ```
 
----
-
-## Open Power BI Dashboard
-
-Refresh the dashboard after ETL execution.
+From Airflow, run and monitor the banking data pipeline.
 
 ---
 
-## Docker Containers
+## 4. Run AI Assistant
 
-(Add screenshot)
+Go to:
 
----
+```bash
+cd ai_application
+```
 
-## Power BI Dashboard
+Install requirements:
 
-(Add dashboard screenshot)
+```bash
+pip install -r requirements.txt
+```
 
----
+Run Streamlit:
 
-# 💼 Skills Demonstrated
+```bash
+streamlit run app.py
+```
 
-- Data Engineering
-- ETL Pipeline
-- ELT Concepts
-- Medallion Architecture
-- PySpark
-- SQL
-- PostgreSQL
-- Docker
-- Docker Compose
-- Apache Airflow
-- Power BI
-- Data Warehouse
-- Data Modeling
-- Data Cleaning
-- Business Transformation
-- SCD Type 2
-- Git
-- GitHub
+The AI Banking Assistant will open in your browser.
 
 ---
 
-# 🔮 Future Enhancements
+# 🔗 Complete Project Flow
 
-- Incremental Loading
-- Kafka Streaming
-- Delta Lake
-- Azure Data Factory
-- Snowflake
-- AWS S3
-- Databricks
-- CI/CD Integration
-- Unit Testing
-- Data Quality Framework
+The entire project can be understood in one line:
+
+```text
+CSV
+ ↓
+PySpark
+ ↓
+Bronze
+ ↓
+Silver
+ ↓
+Gold
+ ↓
+PostgreSQL
+ ↓
+ ├── Power BI → Business Insights
+ │
+ └── AI Assistant → Natural Language Answers
+```
+
+**Airflow** controls and automates the pipeline.
+
+**Docker** provides the environment for running the services.
 
 ---
 
-# 👨‍💻 Author
+# ⭐ Key Features
 
-**Ashwini Giri**
-
-Bachelor of Engineering (Information Technology)
-
-Passionate about Data Engineering, Big Data, ETL Pipelines, Cloud Technologies, and Business Intelligence.
-
+* ✅ End-to-End Data Engineering Pipeline
+* ✅ PySpark Data Processing
+* ✅ Bronze-Silver-Gold Architecture
+* ✅ Data Cleaning & Transformation
+* ✅ PostgreSQL Data Warehouse
+* ✅ Apache Airflow Automation
+* ✅ SCD Type 2 Historical Tracking
+* ✅ Dockerized Environment
+* ✅ Power BI Dashboard
+* ✅ AI-Powered Banking Assistant
+* ✅ Streamlit Chatbot Interface
+* ✅ Natural Language Data Queries
 
 ---
 
-# ⭐ If you found this project helpful, please consider giving it a star!
+# 📚 What I Learned From This Project
+
+This project helped me understand how different technologies work together in a real-world data project.
+
+### Data Engineering
+
+* ETL pipelines
+* Data ingestion
+* Data cleaning
+* Data transformation
+* Data warehousing
+* Data modeling
+
+### Big Data
+
+* PySpark
+* Distributed data processing
+
+### Database
+
+* PostgreSQL
+* SQL
+* Database schemas
+
+### Workflow
+
+* Apache Airflow
+* DAGs
+* Task dependencies
+
+### Visualization
+
+* Power BI
+* Business KPIs
+* Data analysis
+
+### AI Application
+
+* AI assistant development
+* Natural language questions
+* Database integration
+* Streamlit
+
+### DevOps
+
+* Docker
+* Docker Compose
+* Git
+* GitHub
+
+---
+
+# 🔮 Future Improvements
+
+Some possible future improvements are:
+
+* 🔹 Real-time data processing using Kafka
+* 🔹 Cloud deployment
+* 🔹 AWS / Azure integration
+* 🔹 Databricks integration
+* 🔹 Advanced fraud detection
+* 🔹 Predictive analytics
+* 🔹 More advanced AI features
+* 🔹 CI/CD automation
+
+---
+
+# 👩‍💻 Author
+
+## Ashwini Giri
+
+**Information Technology | Data Engineering | Data Science | AI**
+
+Interested in building practical solutions using:
+
+**Python • SQL • PySpark • Airflow • PostgreSQL • Docker • Power BI • AI**
+
+---
+
+# ⭐ Project Repository
+
+**GitHub:**
+https://github.com/Ashwini203205/Banking_Data_Engginering
+
+If you find this project useful, consider giving it a ⭐ **Star**.
+
+---
+
+## 💡 Project in One Sentence
+
+> **A complete banking data platform that transforms raw customer data into business insights through an automated Data Engineering pipeline, Power BI dashboard, and AI-powered Banking Assistant.**
+
+### 🚀 Raw Data → Data Pipeline → Database → Dashboard + AI Assistant

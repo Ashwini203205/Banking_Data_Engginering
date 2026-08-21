@@ -2,9 +2,9 @@
 Database helper — read-only access to the Banking PostgreSQL database.
 """
 
-import warnings
-import pandas as pd
-import psycopg2
+import warnings                       # Used to control warning messages.
+import pandas as pd                  
+import psycopg2                       # connect Python to PostgreSQL
 from config import DB_CONFIG
 
 warnings.filterwarnings("ignore", category=UserWarning, module="pandas")
@@ -31,9 +31,6 @@ def run_query(sql: str) -> pd.DataFrame:
     finally:
         if conn:
             conn.close()
-
-
-
 
 
 def test_connection() -> bool:

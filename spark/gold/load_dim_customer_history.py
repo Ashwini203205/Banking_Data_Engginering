@@ -14,7 +14,7 @@ spark = (
 )
 
 logger.info("Reading Silver Table...")
-
+  
 silver_df = spark.read.jdbc(
     url=JDBC_URL,
     table="silver.customer_clean",
